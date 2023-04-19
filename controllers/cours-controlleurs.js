@@ -30,10 +30,23 @@ const creerCours = async (requete, reponse, next) => {
     etudiants
   });
 
+  let enseignant;
+  try {
+    enseignant = await Prof.findById(professeurId).populate;
+  } catch (err) {
+    return next(
+      new HttpErreur("Erreur lors de la récupération du prof", 500)
+    );
+  }
+  if (!enseignant) {
+    return next(new HttpErreur("Aucun prof trouvée pour l'id fourni", 404));
+  }
+
+
   try {
     await nouveauCours.save();
-    //enseignant.cours.push(nouveauCours);
-    //await enseignant.save();
+    enseignant.cours.push(nouveauCours);
+    await enseignant.save();
   } catch (err) {
     const erreur = new HttpErreur("Création du cours échoué", 500);
     return next(erreur);
