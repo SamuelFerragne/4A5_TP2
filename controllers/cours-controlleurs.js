@@ -24,36 +24,18 @@ const getCoursById = async (requete, reponse, next) => {
 };
 
 const creerCours = async (requete, reponse, next) => {
-  const { prof, etudiants } = requete.body;
+  const { nom, prof, etudiants } = requete.body;
   const nouveauCours = new Cours({
     id: uuidv4(),
+    nom,
     prof,
-    etudiants
+    etudiants,
   });
 
-  let enseignant;
-
   try {
-    enseignant = await Prof.findById(enseignant);
-    
-  } catch {
-    
-    return next(new HttpErreur("Création du cours échoué", 500));
-  }
-
-  if (!enseignant) {
-    return next(new HttpErreur("Professeur non trouvé selon le id"), 504);
-  }
-
-  try {
-
-    
     await nouveauCours.save();
-    //Ce n'est pas le push Javascript, c'est le push de mongoose qui récupe le id de la place et l'ajout au tableau de l'utilisateur
-    enseignant.places.push(nouveauCours);
-    await enseignant.save();
-    //Une transaction ne crée pas automatiquement de collection dans mongodb, même si on a un modèle
-    //Il faut la créer manuellement dans Atlas ou Compass
+    //enseignant.cours.push(nouveauCours);
+    //await enseignant.save();
   } catch (err) {
     const erreur = new HttpErreur("Création du cours échoué", 500);
     return next(erreur);
