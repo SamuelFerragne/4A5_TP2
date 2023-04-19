@@ -12,8 +12,13 @@ const app = express();
 
 app.use(bodyParser.json());
 
+<<<<<<< HEAD
 //app.use("/api/Cours", coursRoute);
 app.use("/api/Etudiant", etudiantRoute);
+=======
+app.use("/api/Cours", coursRoute);
+//app.use("/api/Etudiant", etudiantRoute);
+>>>>>>> 890e3d7ada18d1a1810b76ef4591ab26a71218f6
 //app.use("/api/Prof", profRoute);
 
 app.use((requete, reponse, next) => {
