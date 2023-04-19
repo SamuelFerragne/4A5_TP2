@@ -73,7 +73,7 @@ const updateCours = async (requete, reponse, next) => {
 };
 
 const supprimerCours = async (requete, reponse, next) => {
-  coursId = requete.params.coursId;
+  const coursId = requete.params.coursId;
   let cours;
   try {
     cours = await Cours.findById(coursId).populate("etudiants");
@@ -85,9 +85,11 @@ const supprimerCours = async (requete, reponse, next) => {
   }
 
   try {
-    await cours.remove();
-    cours.etudiants.cours.pull(cours);
-    await cours.etudiants.save();
+    await cours.deleteOne();
+    if(cours.etudiants.length > 0){
+      cours.etudiants.cours.pull(cours);
+      await cours.etudiants.save();
+    }
   } catch {
     return next(new HttpErreur("Erreur lors de la suppression du cours", 500));
   }
