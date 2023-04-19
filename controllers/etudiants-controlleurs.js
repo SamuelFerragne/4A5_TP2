@@ -14,7 +14,7 @@ const getEtudiantById = async (requete, reponse, next) => {
       new HttpErreur("Erreur lors de la récupération de l'étudiant", 500)
     );
   }
-  if (!place) {
+  if (!etudiant) {
     return next(new HttpErreur("Aucun étudiant trouvée pour l'id fourni", 404));
   }
   reponse.json({ etudiant: etudiant.toObject({ getters: true }) });
@@ -60,23 +60,23 @@ const supprimerEtudiant = async (requete, reponse, next) => {
   const etudiantId = requete.params.etudiantId;
   let etudiant;
   try {
-    etudiant = await Etudiant.findById(etudiantId).populate("cours");
-  } catch {
+    etudiant = await Etudiant.findById(etudiantId).populate;
+  } catch (err) {
     return next(
-      new HttpErreur("Erreur lors de la suppression de l'étudiant'", 500)
+      new HttpErreur("Erreur lors de la récupération de l'étudiant", 500)
     );
   }
   if (!etudiant) {
-    return next(new HttpErreur("Impossible de trouver l'étudiant'", 404));
+    return next(new HttpErreur("Aucun étudiant trouvée pour l'id fourni", 404));
   }
 
   try {
     await etudiant.remove();
-    etudiant.cours.etudiants.pull(etudiant);
-    await etudiant.cours.save();
+    //etudiant.cours.etudiants.pull(etudiant);
+    //await etudiant.cours.save();
   } catch {
     return next(
-      new HttpErreur("Erreur lors de la suppression de l'étudiant'", 500)
+      new HttpErreur("Erreur lors de la suppression de l'étudiant' ", 500)
     );
   }
   reponse.status(200).json({ message: "Étudiant supprimée" });
