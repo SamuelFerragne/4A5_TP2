@@ -31,8 +31,8 @@ const creerCours = async (requete, reponse, next) => {
   });
 
   let enseignant;
-  try {
-    enseignant = await Prof.findById(professeurId).populate;
+    try {
+    enseignant = await Prof.findById(prof._id);
   } catch (err) {
     return next(
       new HttpErreur("Erreur lors de la récupération du prof", 500)
