@@ -13,8 +13,8 @@ const app = express();
 app.use(bodyParser.json());
 
 app.use("/api/Cours", coursRoute);
-app.use("/api/Etudiant", etudiantRoute);
-app.use("/api/Prof", profRoute);
+//app.use("/api/Etudiant", etudiantRoute);
+//app.use("/api/Prof", profRoute);
 
 app.use((requete, reponse, next) => {
   return next(new HttpErreur("Route non trouvée", 404));
