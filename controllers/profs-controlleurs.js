@@ -5,20 +5,22 @@ const { v4: uuidv4 } = require("uuid");
 const Professeur = require("../models/prof");
 
 const getProfesseurById = async (requete, reponse, next) => {
-    const professeurId = requete.params.professeurId;
-    let professeur;
-    try {
-      professeur = await Professeur.findById(professeurId);
-    } catch (err) {
-      return next(
-        new HttpErreur("Erreur lors de la récupération du professeur", 500)
-      );
-    }
-    if (!professeur) {
-      return next(new HttpErreur("Aucun professeur trouvé pour l'id fourni", 404));
-    }
-    reponse.json({ professeur: professeur.toObject({ getters: true }) });
-  };
+  const professeurId = requete.params.professeurId;
+  let professeur;
+  try {
+    professeur = await Professeur.findById(professeurId);
+  } catch (err) {
+    return next(
+      new HttpErreur("Erreur lors de la récupération du professeur", 500)
+    );
+  }
+  if (!professeur) {
+    return next(
+      new HttpErreur("Aucun professeur trouvé pour l'id fourni", 404)
+    );
+  }
+  reponse.json({ professeur: professeur.toObject({ getters: true }) });
+};
 
 const creerProfesseur = async (requete, reponse, next) => {
   const { nom, cours } = requete.body;
@@ -53,7 +55,9 @@ const updateProfesseur = async (requete, reponse, next) => {
     );
   }
 
-  reponse.status(200).json({ professeur: professeur.toObject({ getters: true }) });
+  reponse
+    .status(200)
+    .json({ professeur: professeur.toObject({ getters: true }) });
 };
 
 const supprimerProfesseur = async (requete, reponse, next) => {
