@@ -29,7 +29,7 @@ const creerCours = async (requete, reponse, next) => {
     id: uuidv4(),
     nom,
     prof,
-    etudiants,
+    etudiants
   });
 
   try {
@@ -64,7 +64,7 @@ const updateCours = async (requete, reponse, next) => {
 };
 
 const supprimerCours = async (requete, reponse, next) => {
-  const coursId = requete.params.coursId;
+  coursId = requete.params.coursId;
   let cours;
   try {
     cours = await Cours.findById(coursId).populate("etudiants");
