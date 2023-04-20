@@ -11,4 +11,6 @@ router.patch("/:professeurId", controleursProfesseur.updateProfesseur);
 
 router.delete("/:professeurId", controleursProfesseur.supprimerProfesseur);
 
+router.patch("/inscription/:professeurId", controleursProfesseur.inscrireProfesseur);
+
 module.exports = router;
