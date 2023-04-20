@@ -64,7 +64,7 @@ const supprimerProfesseur = async (requete, reponse, next) => {
   const professeurId = requete.params.professeurId;
   let professeur;
   try {
-    professeur = await Professeur.findById(professeurId).populate("cours");
+    professeur = await Professeur.findById(professeurId)//.populate("cours");
   } catch {
     return next(
       new HttpErreur("Erreur lors de la suppression du professeur'", 500)
@@ -78,11 +78,7 @@ const supprimerProfesseur = async (requete, reponse, next) => {
   console.log("professeur.cours", professeur.cours);
 
   try {
-    await professeur.remove();
-    if (Array.isArray(professeur.cours)) {
-      professeur.cours.professeur.pull(professeur);
-      await professeur.cours.save();
-    }
+    await professeur. deleteOne();
   } catch {
     return next(
       new HttpErreur("Erreur lors de la suppression du professeur'", 500)
@@ -91,7 +87,45 @@ const supprimerProfesseur = async (requete, reponse, next) => {
   reponse.status(200).json({ message: "Professeur supprimée" });
 };
 
+const inscrireProfesseur = async (requete, reponse, next) => {
+  const professeurId = requete.params.professeurId;
+  const { cours } = requete.body;
+
+  let professeur;
+  let coursRechercher;
+  try {
+    professeur = await Professeur.findById(professeurId);
+    professeur.cours.push(cours);
+    await professeur.save();
+  } catch {
+    return next(
+      new HttpErreur("Erreur lors de la mise à jour du professeur", 500)
+    );
+  }
+  if (!professeur) {
+    return next(new HttpErreur("Impossible de trouver le professeur", 404));
+  }
+
+  try {
+    coursRechercher = await Cours.findById(cours._id);
+    coursRechercher.professeurs.push(professeur);
+    console.log("1");
+    await coursRechercher.save();
+    console.log("2");
+  } catch {
+    return next(
+      new HttpErreur(
+        "Erreur lors de l'inscription du professeur au cours'",
+        500
+      )
+    );
+  }
+  reponse.status(200).json({ message: "Professeur inscrit" });
+};
+
+
 exports.creerProfesseur = creerProfesseur;
 exports.getProfesseurById = getProfesseurById;
 exports.updateProfesseur = updateProfesseur;
 exports.supprimerProfesseur = supprimerProfesseur;
+exports.inscrireProfesseur = inscrireProfesseur;
